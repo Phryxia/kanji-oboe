@@ -1,0 +1,15 @@
+.toggle-button {
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid #555;
+  border-radius: 5px;
+
+  &.checked {
+    background: #38e;
+  }
+
+  input {
+    display: none;
+    visibility: hidden;
+  }
+}

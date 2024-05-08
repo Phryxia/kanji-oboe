@@ -1,0 +1,64 @@
+.root {
+  display: flex;
+  flex-direction: column;
+
+  & > :not(:last-child) {
+    margin-bottom: 10px;
+  }
+
+  .progress {
+    width: 100%;
+  }
+
+  .directive {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hint {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vw;
+    font-size: 10vw;
+    width: 100%;
+  }
+
+  .choices {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    padding: 0;
+
+    .choice-wrapper {
+      list-style-type: none;
+
+      &:not(:last-child) {
+        margin-bottom: 10px;
+      }
+
+      .choice {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #555;
+        background: #fff;
+
+        &.wrong {
+          background-color: #e33;
+        }
+
+        &.correct {
+          background-color: #3e3;
+
+          &:disabled {
+            color: inherit;
+          }
+        }
+
+        &:;
+      }
+    }
+  }
+}
