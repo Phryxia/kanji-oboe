@@ -1,3 +1,5 @@
+import classnames from 'classnames/bind'
+import styles from './QuestionSchemaViewer.module.css'
 import { useCallback, useMemo } from 'react'
 import { JLPTLevels } from '../../consts/jlptLevels'
 import { KankenLevels } from '../../consts/kankenLevels'
@@ -8,6 +10,8 @@ import { useDomainFilter } from './useDomainFilter'
 import { DisplayTypes, LabeledDisplayTypes } from '../../consts/displayTypes'
 import { LabeledOrderingTypes } from '../../consts/orderingTypes'
 import { guardZeroLength } from '../../utils/array'
+
+const cx = classnames.bind(styles)
 
 const LabeledJLPTLevels = JLPTLevels.map((level) => ({
   label: `N${level}`,
@@ -64,24 +68,24 @@ export function QuestionSchemaViewer({}: Props) {
 
   return (
     <section>
-      <li>
-        <label>JLPT급수</label>
+      <li className={cx('property')}>
+        <label className={cx('jlpt')}>JLPT 기출 급수</label>
         <TagCheckboxes
           entries={LabeledJLPTLevels}
           selectedValues={jlptLevels}
           onChange={handleJLPTFilterChange}
         />
       </li>
-      <li>
-        <label>한자능력검정급수</label>
+      <li className={cx('property')}>
+        <label>일본 한자능력검정 급수</label>
         <TagCheckboxes
           entries={LabeledKankenLevels}
           selectedValues={kankenLevels}
           onChange={handleKankenFilterChange}
         />
       </li>
-      <li>
-        <label>출제 순서</label>
+      <li className={cx('property')}>
+        <label>출제 순서:</label>
         <select
           value={schema.ordering}
           onChange={(e) => handleOrderingChange(e.target.value as OrderingType)}
@@ -93,7 +97,8 @@ export function QuestionSchemaViewer({}: Props) {
           ))}
         </select>
       </li>
-      <li>
+      <li className={cx('property')}>
+        <label>문제 유형:</label>
         <select
           value={schema.inputType}
           onChange={(e) => handleInputTypeChange(e.target.value as DisplayType)}

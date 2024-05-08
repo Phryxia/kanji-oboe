@@ -1,5 +1,7 @@
 .tags {
   display: inline-flex;
+  flex-wrap: wrap;
+  row-gap: 8px;
 
   & > :not(:last-child) {
     margin-right: 8px;

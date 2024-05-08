@@ -1,0 +1,21 @@
+.property {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  &:not(:last-child) {
+    margin-bottom: 16px;
+  }
+
+  & > label {
+    font-weight: bold;
+  }
+
+  & > :not(:last-child) {
+    margin-right: 8px;
+  }
+
+  .jlpt {
+    width: 100%;
+  }
+}

@@ -34,7 +34,7 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
   }, [question])
 
   return (
-    <div className={cx('root')}>
+    <section className={cx('root')}>
       <progress className={cx('progress')} value={progress} max={totalCount}>
         {progress} / {totalCount}
       </progress>
@@ -63,6 +63,6 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
       {isSelected && <button onClick={handleNext}>다음</button>}
 
       {isSelected && (isCorrect ? '정답' : '오답')}
-    </div>
+    </section>
   )
 }

@@ -93,4 +93,13 @@ textarea:not([rows]) {
 
 select {
   cursor: pointer;
+  border-radius: 5px;
+  padding: 1px 5px;
+}
+
+/* React root */
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

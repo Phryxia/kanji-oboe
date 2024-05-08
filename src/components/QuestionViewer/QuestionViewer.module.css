@@ -20,8 +20,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 10vw;
-    font-size: 10vw;
+    height: calc(min(10vw, 64px));
+    font-size: calc(min(10vw, 64px));
     width: 100%;
   }
 
@@ -35,7 +35,7 @@
       list-style-type: none;
 
       &:not(:last-child) {
-        margin-bottom: 10px;
+        margin-bottom: 16px;
       }
 
       .choice {
@@ -44,6 +44,7 @@
         border-radius: 8px;
         border: 1px solid #555;
         background: #fff;
+        cursor: pointer;
 
         &.wrong {
           background-color: #e33;
