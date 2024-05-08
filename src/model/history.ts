@@ -1,4 +1,4 @@
-import type { Question } from './types'
+import type { Question, SerializableQuestionSchema } from './types'
 
 export interface SolveHistory {
   question: Question
@@ -6,7 +6,7 @@ export interface SolveHistory {
 }
 
 export interface BatchHistory {
-  batch: Question[]
+  schema: SerializableQuestionSchema
   choices: SolveHistory[]
   progress: number
   totalCount: number

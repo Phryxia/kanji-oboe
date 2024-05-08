@@ -3,8 +3,12 @@ import { type Question } from '../../model/types'
 import { createQuestions } from '../../utils/question'
 import { useKanjiList } from '../useKanjiList'
 import { useRuntimeSchema } from '../QuerySchemaContext'
+import { useBatchHistoryRecorder } from '../BatchHistoryContext'
+
+const batchSize = 10
 
 export function useQuestionViewer() {
+  const { initialize, update, finish } = useBatchHistoryRecorder()
   const currentSchema = useRuntimeSchema()
   const { isLoading, kanjis, kankenLevels } = useKanjiList()
   const [generator, setGenerator] = useState<Generator<Question[]> | undefined>()
@@ -17,18 +21,21 @@ export function useQuestionViewer() {
     const generator = createQuestions({
       ...currentSchema,
       domain: kanjis,
-      batchSize: 10,
+      batchSize,
     })
     setGenerator(generator)
   }, [kanjis, kankenLevels, currentSchema])
 
   function goNextBatch() {
+    finish()
+
     const res = generator?.next().value
 
     if (!res) return
 
     setQuestions(res)
     setQuestIndex(0)
+    initialize(currentSchema, batchSize)
   }
 
   useLayoutEffect(() => {
@@ -38,10 +45,14 @@ export function useQuestionViewer() {
   const currentQuestion = questions?.[questIndex]
   const isLastInBatch = !!generator && questions?.length === questIndex + 1
 
-  function goNextQuestion() {
+  function goNextQuestion(choice: string) {
     if (isLastInBatch) {
       goNextBatch()
       return
+    }
+
+    if (currentQuestion) {
+      update({ choice, question: currentQuestion })
     }
     setQuestIndex((q) => q + 1)
   }

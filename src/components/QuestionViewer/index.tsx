@@ -1,14 +1,14 @@
-import { useLayoutEffect, useMemo, useState } from 'react'
 import classnames from 'classnames/bind'
+import styles from './QuestionViewer.module.css'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import type { Question } from '../../model/types'
 import { shuffle } from '../../utils/math'
-import styles from './QuestionViewer.module.css'
 
 const cx = classnames.bind(styles)
 
 interface Props {
   question: Question
-  onProceed(isCorrect: boolean): void
+  onProceed(choice: string): void
   progress: number
   totalCount: number
 }
@@ -26,7 +26,7 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
   const isCorrect = !!selection && answers.includes(selection)
 
   function handleNext() {
-    onProceed(isCorrect)
+    onProceed(selection)
   }
 
   useLayoutEffect(() => {
