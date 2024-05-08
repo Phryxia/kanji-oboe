@@ -158,5 +158,5 @@ function getDirective(inputType: DisplayType, outputTypes: DisplayType[]) {
 
   const inputText = DisplayTypeTranslation[inputType]
 
-  return `${inputText}이 다음과 같은 ${outputText === '한자' ? '한자' : `한자의 ${outputText}을 고르시오.`}`
+  return `${inputText}이 다음과 같은 ${outputText === '한자' ? '한자를' : `한자의 ${outputText}을`} 고르시오`
 }
