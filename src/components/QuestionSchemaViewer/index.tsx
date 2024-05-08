@@ -92,6 +92,14 @@ export function QuestionSchemaViewer({}: Props) {
           value={schema.choiceCount}
           onChange={(e) => handleChoiceCountChange(Number(e.target.value))}
         />
+        <label>불규칙 발음 포함:</label>
+        <input
+          type="checkbox"
+          value={schema.isExceptionAllowed ? 'true' : 'false'}
+          onChange={(e) =>
+            createChangeHandler('isExceptionAllowed')(e.target.value === 'true')
+          }
+        />
       </li>
     </section>
   )

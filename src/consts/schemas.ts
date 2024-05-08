@@ -8,7 +8,7 @@ export const DefaultSchema: QuestionSchema = {
   answerMethod: AnswerMethod.Single,
   inputType: 'kanji',
   outputTypes: ['onyomi', 'kunyomi'],
-  ordering: 'round-robin',
+  ordering: 'shuffle',
   wrongAnswerRanker: () => 1,
   isExceptionAllowed: false,
 }
