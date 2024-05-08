@@ -45,13 +45,21 @@ export function QuestionSchemaViewer({}: Props) {
 
   function handleInputTypeChange(inputType: DisplayType) {
     createChangeHandler('inputType')(inputType)
-    createChangeHandler('outputTypes')(filterOutputTypes(inputType, schema.outputTypes))
+    createChangeHandler('outputTypes')(
+      guardZeroLength(
+        filterOutputTypes(inputType, schema.outputTypes),
+        filterOutputTypes(inputType, DisplayTypes),
+      ),
+    )
   }
 
   function handleOutputTypesChange(outputTypes: DisplayType[]) {
-    if (!outputTypes.length) return
-
-    createChangeHandler('outputTypes')(outputTypes)
+    createChangeHandler('outputTypes')(
+      guardZeroLength(
+        outputTypes,
+        validOutputTypes.map(({ value }) => value),
+      ),
+    )
   }
 
   return (
@@ -108,11 +116,6 @@ export function QuestionSchemaViewer({}: Props) {
   )
 }
 
-function filterOutputTypes(
-  inputType: DisplayType,
-  outputTypes: DisplayType[],
-): DisplayType[] {
-  const result = outputTypes.filter((value) => value !== inputType)
-
-  return guardZeroLength(result, filterOutputTypes(inputType, DisplayTypes))
+function filterOutputTypes(inputType: DisplayType, outputTypes: DisplayType[]) {
+  return outputTypes.filter((value) => value !== inputType)
 }

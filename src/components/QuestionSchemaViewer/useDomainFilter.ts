@@ -2,9 +2,11 @@ import { useLayoutEffect, useState } from 'react'
 import { useSetQuestionSchema } from '../QuerySchemaContext'
 import type { KankenLevel } from '../../model/types'
 
+const DefaultJLPTSelection = [5]
+
 export function useDomainFilter() {
   const [schema, setSchema] = useSetQuestionSchema()
-  const [jlptLevels, setJLPTLevels] = useState([5])
+  const [jlptLevels, setJLPTLevels] = useState(DefaultJLPTSelection)
   const [kankenLevels, setKankenLevels] = useState<KankenLevel[]>([])
 
   const isEmpty = jlptLevels.length === 0 && kankenLevels.length === 0
@@ -18,10 +20,15 @@ export function useDomainFilter() {
   }
 
   useLayoutEffect(() => {
+    if (isEmpty) {
+      setJLPTLevels(DefaultJLPTSelection)
+      setKankenLevels([])
+      return
+    }
+
     setSchema({
       ...schema,
       domainFilter: (kanji) =>
-        isEmpty ||
         jlptLevels.includes(kanji.jlptLevel ?? 0) ||
         kankenLevels.includes(kanji.kankenLevel),
     })
