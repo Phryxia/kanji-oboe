@@ -53,7 +53,7 @@ export function QuestionType({
           </option>
         ))}
       </select>
-      <span>를 보고 </span>
+      <span>에 맞는</span>
       <TagCheckboxes
         entries={validOutputTypes}
         selectedValues={outputTypes}
