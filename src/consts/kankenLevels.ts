@@ -9,6 +9,7 @@ export const KankenLevels = [
   '3',
   'pre2',
   '2',
-  'pre1',
-  '1',
+  // 비상용한자는 추후 지원
+  // 'pre1',
+  // '1',
 ]
