@@ -8,9 +8,18 @@ interface CreateQuestionSchema extends QuestionSchema {
 }
 
 export function* createQuestions({ domain, batchSize, ...schema }: CreateQuestionSchema) {
+  const filteredDomain = pipe(
+    domain,
+    filter(schema.domainFilter),
+    removeUnsupportedKanjis(schema.outputTypes),
+    toArray,
+  )
+
   yield* pipe(
-    createAnswerBatch(domain.filter(schema.domainFilter), schema.ordering, batchSize),
-    map((batch) => batch.map((trueAnswer) => createQuestion(domain, trueAnswer, schema))),
+    createAnswerBatch(filteredDomain, schema.ordering, batchSize),
+    map((batch) =>
+      batch.map((trueAnswer) => createQuestion(filteredDomain, trueAnswer, schema)),
+    ),
   )
 }
 
@@ -36,6 +45,12 @@ function* createAnswerBatch(
       index = (index + batchSize) % domain.length
     }
   }
+}
+
+function removeUnsupportedKanjis(outputTypes: DisplayType[]) {
+  return filter<Iterable<Kanji>>((kanji) =>
+    outputTypes.some((outputType) => kanji[outputType]?.length),
+  )
 }
 
 function sliceWrapped<T>(list: T[], start: number, size: number) {
@@ -90,8 +105,8 @@ function removeExceptional(isExceptionAllowed: boolean, kanji: Kanji) {
 
   return {
     ...kanji,
-    onyomi: kanji.onyomi.filter((reading) => !reading.includes('[')),
-    kunyomi: kanji.kunyomi.filter((reading) => !reading.includes('[')),
+    onyomi: kanji.onyomi?.filter((reading) => !reading.includes('[')),
+    kunyomi: kanji.kunyomi?.filter((reading) => !reading.includes('[')),
   }
 }
 
@@ -106,7 +121,9 @@ function hasAnswer(target: Kanji, choice: Kanji, displayTypes: DisplayType[]) {
     if (displayType === 'kanji') {
       return target.kanji === choice.kanji
     }
-    return target[displayType].some((reading) => choice[displayType].includes(reading))
+    return !!target[displayType]?.some((reading) =>
+      choice[displayType]?.includes(reading),
+    )
   })
 }
 
@@ -132,7 +149,8 @@ function displayKanji(kanji: Kanji, displayType: DisplayType) {
     return kanji.kanji
   }
   const bin = kanji[displayType]
-  return bin[randomInteger(0, bin.length - 1)]
+
+  return bin?.[randomInteger(0, bin.length - 1)] ?? ''
 }
 
 // TODO: migrate to airport

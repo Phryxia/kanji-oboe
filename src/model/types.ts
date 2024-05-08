@@ -7,8 +7,8 @@ export interface Kanji {
   jlptLevel?: number
   kankenLevel: KankenLevel
   radicals: string[]
-  onyomi: string[]
-  kunyomi: string[]
+  onyomi?: string[]
+  kunyomi?: string[]
 }
 
 export type KankenLevel =
