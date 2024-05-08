@@ -8,13 +8,13 @@ const cx = classnames.bind(styles)
 
 interface Props<T> {
   entries: LabelPair<T>[]
-  selectedValues: T[]
+  selectedValues?: T[]
   onChange(selectedValues: T[]): void
 }
 
 export function TagCheckboxes<T>({ entries, selectedValues, onChange }: Props<T>) {
   const [isChecked, setIsChecked] = useState(
-    entries.map(({ value }) => selectedValues.includes(value)),
+    entries.map(({ value }) => !!selectedValues?.includes(value)),
   )
 
   function createHandleChange(index: number) {
@@ -26,7 +26,7 @@ export function TagCheckboxes<T>({ entries, selectedValues, onChange }: Props<T>
   }
 
   useLayoutEffect(() => {
-    setIsChecked(entries.map(({ value }) => selectedValues.includes(value)))
+    setIsChecked(entries.map(({ value }) => !!selectedValues?.includes(value)))
   }, [selectedValues])
 
   return (

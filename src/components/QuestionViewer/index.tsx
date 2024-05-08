@@ -41,7 +41,7 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
 
       <p className={cx('directive')}>{directive}</p>
 
-      <div className={cx('hint')}>{hint}</div>
+      <div className={cx('hint')}>{removeBracket(hint)}</div>
 
       <ul className={cx('choices', { two_track: choices.length >= 5 })}>
         {choices.map((choice) => (
@@ -54,7 +54,7 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
               onClick={() => setSelection(choice)}
               disabled={isSelected}
             >
-              {choice.replace(/\\[\\]/g, '')}
+              {removeBracket(choice)}
             </button>
           </li>
         ))}
@@ -69,4 +69,8 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
       </ul>
     </section>
   )
+}
+
+function removeBracket(s: string) {
+  return s.replace(/\\[\\]/g, '')
 }

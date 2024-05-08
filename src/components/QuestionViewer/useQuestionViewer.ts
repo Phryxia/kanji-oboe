@@ -2,10 +2,10 @@ import { useLayoutEffect, useState } from 'react'
 import { type Question } from '../../model/types'
 import { createQuestions } from '../../utils/question'
 import { useKanjiList } from '../useKanjiList'
-import { useQuestionSchema } from '../QuerySchemaContext'
+import { useRuntimeSchema } from '../QuerySchemaContext'
 
 export function useQuestionViewer() {
-  const currentSchema = useQuestionSchema()
+  const currentSchema = useRuntimeSchema()
   const { isLoading, kanjis, kankenLevels } = useKanjiList()
   const [generator, setGenerator] = useState<Generator<Question[]> | undefined>()
   const [questions, setQuestions] = useState<Question[]>()

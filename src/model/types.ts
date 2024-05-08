@@ -49,4 +49,10 @@ export interface QuestionSchema {
   isExceptionAllowed?: boolean
 }
 
+export interface SerializableQuestionSchema
+  extends Omit<QuestionSchema, 'domainFilter' | 'wrongAnswerRanker'> {
+  jlptLevels?: number[]
+  kankenLevels?: string[]
+}
+
 export type LabelPair<T> = { value: T; label: string }

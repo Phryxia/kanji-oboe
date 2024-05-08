@@ -11,7 +11,7 @@ export function* createQuestions({ domain, batchSize, ...schema }: CreateQuestio
   const filteredDomain = pipe(
     domain,
     filter(schema.domainFilter),
-    removeUnsupportedKanjis(schema.outputTypes),
+    removeUnsupportedKanjis(schema.inputType, schema.outputTypes),
     toArray,
   )
 
@@ -47,9 +47,11 @@ function* createAnswerBatch(
   }
 }
 
-function removeUnsupportedKanjis(outputTypes: DisplayType[]) {
-  return filter<Iterable<Kanji>>((kanji) =>
-    outputTypes.some((outputType) => kanji[outputType]?.length),
+function removeUnsupportedKanjis(inputType: DisplayType, outputTypes: DisplayType[]) {
+  return filter<Iterable<Kanji>>(
+    (kanji) =>
+      hasTypeOf(kanji, inputType) &&
+      outputTypes.some((outputType) => hasTypeOf(kanji, outputType)),
   )
 }
 
@@ -112,19 +114,23 @@ function removeExceptional(isExceptionAllowed: boolean, kanji: Kanji) {
 
 function removeTrueAnswersFromChoices(trueAnswers: Kanji[], displayTypes: DisplayType[]) {
   return filter<Iterable<Kanji>>((wrongAnswer) =>
-    trueAnswers.every((trueAnswer) => !hasAnswer(trueAnswer, wrongAnswer, displayTypes)),
+    displayTypes.every((displayType) =>
+      trueAnswers.every(
+        (trueAnswer) => !hasIntersection(trueAnswer, wrongAnswer, displayType),
+      ),
+    ),
   )
 }
 
-function hasAnswer(target: Kanji, choice: Kanji, displayTypes: DisplayType[]) {
-  return displayTypes.every((displayType) => {
-    if (displayType === 'kanji') {
-      return target.kanji === choice.kanji
-    }
-    return !!target[displayType]?.some((reading) =>
-      choice[displayType]?.includes(reading),
-    )
-  })
+function hasTypeOf(k: Kanji, displayType: DisplayType) {
+  return displayType === 'kanji' || !!k[displayType]?.length
+}
+
+function hasIntersection(a: Kanji, b: Kanji, displayType: DisplayType) {
+  if (displayType === 'kanji') {
+    return a.kanji === b.kanji
+  }
+  return a[displayType]?.some((element) => b[displayType]?.includes(element))
 }
 
 function removeDuplicatedChoices(list: Iterable<string>) {
@@ -139,7 +145,9 @@ function removeDuplicatedChoices(list: Iterable<string>) {
 
 function displayKanjiRandomly(kanji: Kanji, outputTypes: DisplayType[]) {
   const feasibleTypes = shuffle(
-    outputTypes.filter((outputType) => displayKanji(kanji, outputType)),
+    outputTypes.filter(
+      (outputType) => outputType === 'kanji' || !!kanji[outputType]?.length,
+    ),
   )
   return displayKanji(kanji, takeRandom(feasibleTypes))
 }

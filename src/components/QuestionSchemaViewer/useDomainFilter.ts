@@ -1,42 +1,25 @@
-import { useLayoutEffect, useState } from 'react'
-import { useSetQuestionSchema } from '../QuerySchemaContext'
-import type { KankenLevel } from '../../model/types'
+import { useLayoutEffect } from 'react'
+import { useQuestionSchema } from '../QuerySchemaContext'
+import { useSchemaChangeHandler } from './useSchemaChangeHandler'
 
 const DefaultJLPTSelection = [5]
 
 export function useDomainFilter() {
-  const [schema, setSchema] = useSetQuestionSchema()
-  const [jlptLevels, setJLPTLevels] = useState(DefaultJLPTSelection)
-  const [kankenLevels, setKankenLevels] = useState<KankenLevel[]>([])
-
-  const isEmpty = jlptLevels.length === 0 && kankenLevels.length === 0
-
-  function handleJLPTFilterChange(selectedLevels: number[]) {
-    setJLPTLevels(selectedLevels)
-  }
-
-  function handleKankenFilterChange(selectedLevels: KankenLevel[]) {
-    setKankenLevels(selectedLevels)
-  }
+  const schema = useQuestionSchema()
+  const createChangeHandler = useSchemaChangeHandler()
+  const handleJLPTFilterChange = createChangeHandler('jlptLevels')
+  const handleKankenFilterChange = createChangeHandler('kankenLevels')
 
   useLayoutEffect(() => {
-    if (isEmpty) {
-      setJLPTLevels(DefaultJLPTSelection)
-      setKankenLevels([])
-      return
-    }
+    const isEmpty = !schema.jlptLevels?.length && !schema.kankenLevels?.length
 
-    setSchema({
-      ...schema,
-      domainFilter: (kanji) =>
-        jlptLevels.includes(kanji.jlptLevel ?? 0) ||
-        kankenLevels.includes(kanji.kankenLevel),
-    })
-  }, [jlptLevels, kankenLevels])
+    if (isEmpty) {
+      handleJLPTFilterChange(DefaultJLPTSelection)
+      handleKankenFilterChange(undefined)
+    }
+  }, [schema.jlptLevels, schema.kankenLevels])
 
   return {
-    jlptLevels,
-    kankenLevels,
     handleJLPTFilterChange,
     handleKankenFilterChange,
   }

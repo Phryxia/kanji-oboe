@@ -1,14 +1,14 @@
 import classnames from 'classnames/bind'
 import styles from './QuestionSchemaViewer.module.css'
-import { useCallback } from 'react'
 import { JLPTLevels } from '../../consts/jlptLevels'
 import { KankenLevels } from '../../consts/kankenLevels'
-import type { OrderingType, QuestionSchema } from '../../model/types'
-import { useSetQuestionSchema } from '../QuerySchemaContext'
+import type { OrderingType } from '../../model/types'
+import { useQuestionSchema } from '../QuerySchemaContext'
 import { TagCheckboxes } from '../shared/TagCheckboxes'
 import { LabeledOrderingTypes } from '../../consts/orderingTypes'
-import { useDomainFilter } from './useDomainFilter'
 import { QuestionType } from './QuestionType'
+import { useSchemaChangeHandler } from './useSchemaChangeHandler'
+import { useDomainFilter } from './useDomainFilter'
 
 const cx = classnames.bind(styles)
 
@@ -24,21 +24,10 @@ const LabeledKankenLevels = KankenLevels.map((level) => ({
 interface Props {}
 
 export function QuestionSchemaViewer({}: Props) {
-  const [schema, setSchema] = useSetQuestionSchema()
+  const schema = useQuestionSchema()
+  const createChangeHandler = useSchemaChangeHandler()
 
-  const { jlptLevels, kankenLevels, handleJLPTFilterChange, handleKankenFilterChange } =
-    useDomainFilter()
-
-  const createChangeHandler = useCallback(
-    (name: keyof QuestionSchema) => (newValue: any) => {
-      setSchema((schema) => ({
-        ...schema,
-        [name]: newValue,
-      }))
-    },
-    [],
-  )
-
+  const { handleJLPTFilterChange, handleKankenFilterChange } = useDomainFilter()
   const handleOrderingChange = createChangeHandler('ordering')
   const handleChoiceCountChange = createChangeHandler('choiceCount')
 
@@ -48,7 +37,7 @@ export function QuestionSchemaViewer({}: Props) {
         <label className={cx('jlpt')}>JLPT 기출 급수</label>
         <TagCheckboxes
           entries={LabeledJLPTLevels}
-          selectedValues={jlptLevels}
+          selectedValues={schema.jlptLevels}
           onChange={handleJLPTFilterChange}
         />
       </li>
@@ -56,7 +45,7 @@ export function QuestionSchemaViewer({}: Props) {
         <label>일본 한자능력검정 급수</label>
         <TagCheckboxes
           entries={LabeledKankenLevels}
-          selectedValues={kankenLevels}
+          selectedValues={schema.kankenLevels}
           onChange={handleKankenFilterChange}
         />
       </li>
@@ -97,7 +86,7 @@ export function QuestionSchemaViewer({}: Props) {
           type="checkbox"
           value={schema.isExceptionAllowed ? 'true' : 'false'}
           onChange={(e) =>
-            createChangeHandler('isExceptionAllowed')(e.target.value === 'true')
+            createChangeHandler('isExceptionAllowed')(e.target.value !== 'true')
           }
         />
       </li>
