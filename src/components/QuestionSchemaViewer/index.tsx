@@ -40,6 +40,7 @@ export function QuestionSchemaViewer({}: Props) {
   )
 
   const handleOrderingChange = createChangeHandler('ordering')
+  const handleChoiceCountChange = createChangeHandler('choiceCount')
 
   return (
     <section>
@@ -79,6 +80,17 @@ export function QuestionSchemaViewer({}: Props) {
           outputTypes={schema.outputTypes}
           onChangeInputType={createChangeHandler('inputType')}
           onChangeOutputsType={createChangeHandler('outputTypes')}
+        />
+      </li>
+      <li className={cx('property')}>
+        <label>선택지 수:</label>
+        <input
+          type="number"
+          step="1"
+          min="2"
+          max="8"
+          value={schema.choiceCount}
+          onChange={(e) => handleChoiceCountChange(Number(e.target.value))}
         />
       </li>
     </section>

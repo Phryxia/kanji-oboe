@@ -3,4 +3,8 @@
   flex-direction: column;
   justify-content: stretch;
   max-width: 480px;
+
+  & > :not(:last-child) {
+    margin-bottom: 32px;
+  }
 }
