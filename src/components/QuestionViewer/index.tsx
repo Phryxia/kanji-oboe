@@ -43,7 +43,7 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
 
       <div className={cx('hint')}>{hint}</div>
 
-      <ul className={cx('choices')}>
+      <ul className={cx('choices', { two_track: choices.length >= 5 })}>
         {choices.map((choice) => (
           <li key={choice} className={cx('choice-wrapper')}>
             <button
@@ -58,11 +58,15 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
             </button>
           </li>
         ))}
+
+        {isSelected && (
+          <li className={cx('choice-wrapper', 'next_button')}>
+            <button className={cx('choice')} onClick={handleNext}>
+              다음
+            </button>
+          </li>
+        )}
       </ul>
-
-      {isSelected && <button onClick={handleNext}>다음</button>}
-
-      {isSelected && (isCorrect ? '정답' : '오답')}
     </section>
   )
 }
