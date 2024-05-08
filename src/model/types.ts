@@ -34,6 +34,7 @@ export interface Question {
   hint: string
 }
 
+export type OrderingType = 'random' | 'shuffle' | 'round-robin'
 export type DisplayType = 'kanji' | 'onyomi' | 'kunyomi'
 
 export interface QuestionSchema {
@@ -41,9 +42,11 @@ export interface QuestionSchema {
   answerMethod: AnswerMethod
   answerCount: number
   choiceCount: number
-  ordering: 'random' | 'shuffle' | 'round-robin'
+  ordering: OrderingType
   inputType: DisplayType
   outputTypes: DisplayType[]
   wrongAnswerRanker(choice: Kanji, trueAnswer: Kanji, domain: Kanji[]): number
   isExceptionAllowed?: boolean
 }
+
+export type LabelPair<T> = { value: T; label: string }
