@@ -37,6 +37,7 @@ export const Route = createFileRoute('/statistics/by-group')({
       <>
         <Navigation />
         <GroupsStatistics
+          bigGroupName={group}
           decideGroup={decideGroup}
           sortGroup={Groups[group].sorter}
           setTitle={Groups[group].setTitle}

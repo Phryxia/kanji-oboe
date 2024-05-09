@@ -9,12 +9,18 @@ import { GroupStatistics } from './GroupStatistics'
 const cx = classnames.bind(styles)
 
 interface Props {
+  bigGroupName: string
   decideGroup: (kanji: Kanji) => string
   sortGroup: (titleA: string, titleB: string) => number
   setTitle: (groupName: string) => string
 }
 
-export function GroupsStatistics({ decideGroup, sortGroup, setTitle }: Props) {
+export function GroupsStatistics({
+  bigGroupName,
+  decideGroup,
+  sortGroup,
+  setTitle,
+}: Props) {
   const { isLoading, kanjis } = useKanjiList()
 
   const groups = useMemo(() => {
@@ -29,7 +35,7 @@ export function GroupsStatistics({ decideGroup, sortGroup, setTitle }: Props) {
     <ul className={cx('root')}>
       {isLoading && <span>Loading...</span>}
       {groups?.map(([groupName, elements]) => (
-        <li key={groupName}>
+        <li key={`${bigGroupName}-${groupName}`}>
           <GroupStatistics title={setTitle(groupName)} kanjis={elements} />
         </li>
       ))}
