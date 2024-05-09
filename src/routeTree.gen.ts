@@ -14,12 +14,12 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as StatisticsByGroupImport } from './routes/statistics/by-group'
 
 // Create Virtual Routes
 
 const ConfigLazyImport = createFileRoute('/config')()
 const StatisticsIndexLazyImport = createFileRoute('/statistics/')()
-const StatisticsByGroupLazyImport = createFileRoute('/statistics/by-group')()
 const StatisticsByCharacterLazyImport = createFileRoute(
   '/statistics/by-character',
 )()
@@ -43,19 +43,17 @@ const StatisticsIndexLazyRoute = StatisticsIndexLazyImport.update({
   import('./routes/statistics/index.lazy').then((d) => d.Route),
 )
 
-const StatisticsByGroupLazyRoute = StatisticsByGroupLazyImport.update({
-  path: '/statistics/by-group',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/statistics/by-group.lazy').then((d) => d.Route),
-)
-
 const StatisticsByCharacterLazyRoute = StatisticsByCharacterLazyImport.update({
   path: '/statistics/by-character',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
   import('./routes/statistics/by-character.lazy').then((d) => d.Route),
 )
+
+const StatisticsByGroupRoute = StatisticsByGroupImport.update({
+  path: '/statistics/by-group',
+  getParentRoute: () => rootRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -69,12 +67,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConfigLazyImport
       parentRoute: typeof rootRoute
     }
-    '/statistics/by-character': {
-      preLoaderRoute: typeof StatisticsByCharacterLazyImport
+    '/statistics/by-group': {
+      preLoaderRoute: typeof StatisticsByGroupImport
       parentRoute: typeof rootRoute
     }
-    '/statistics/by-group': {
-      preLoaderRoute: typeof StatisticsByGroupLazyImport
+    '/statistics/by-character': {
+      preLoaderRoute: typeof StatisticsByCharacterLazyImport
       parentRoute: typeof rootRoute
     }
     '/statistics/': {
@@ -89,8 +87,8 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
   ConfigLazyRoute,
+  StatisticsByGroupRoute,
   StatisticsByCharacterLazyRoute,
-  StatisticsByGroupLazyRoute,
   StatisticsIndexLazyRoute,
 ])
 
