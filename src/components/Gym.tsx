@@ -2,7 +2,6 @@ import classnames from 'classnames/bind'
 import styles from './Gym.module.css'
 import { QuestionViewer } from './QuestionViewer'
 import { useQuestionViewer } from './QuestionViewer/useQuestionViewer'
-import { QuestionSchemaViewer } from './QuestionSchemaViewer'
 
 const cx = classnames.bind(styles)
 
@@ -14,7 +13,6 @@ export function Gym({}: Props) {
 
   return (
     <main className={cx('root')}>
-      <QuestionSchemaViewer />
       {isLoading && <div>LOADING...</div>}
       {currentQuestion && (
         <QuestionViewer
