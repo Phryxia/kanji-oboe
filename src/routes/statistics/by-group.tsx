@@ -13,10 +13,12 @@ const Groups = {
   jlpt: {
     property: 'jlptLevel',
     sorter: sortJLPTGroup,
+    setTitle: (name: string) => (name === ETC ? name : `N${name}`),
   },
   kanken: {
     property: 'kankenLevel',
     sorter: sortKankenGroup,
+    setTitle: (name: string) => (name === ETC ? name : `${name.replace('pre', '준')}급`),
   },
 } as const
 
@@ -34,7 +36,11 @@ export const Route = createFileRoute('/statistics/by-group')({
     return (
       <>
         <Navigation />
-        <GroupsStatistics decideGroup={decideGroup} sortGroup={Groups[group].sorter} />
+        <GroupsStatistics
+          decideGroup={decideGroup}
+          sortGroup={Groups[group].sorter}
+          setTitle={Groups[group].setTitle}
+        />
       </>
     )
   },

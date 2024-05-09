@@ -1,15 +1,20 @@
+import classnames from 'classnames/bind'
+import styles from './GroupsStatistics.module.css'
 import { useMemo } from 'react'
-import { Kanji } from '../../model/types'
-import { useKanjiList } from '../useKanjiList'
 import { groupBy } from '@fxts/core'
+import type { Kanji } from '../../model/types'
+import { useKanjiList } from '../useKanjiList'
 import { GroupStatistics } from './GroupStatistics'
+
+const cx = classnames.bind(styles)
 
 interface Props {
   decideGroup: (kanji: Kanji) => string
   sortGroup: (titleA: string, titleB: string) => number
+  setTitle: (groupName: string) => string
 }
 
-export function GroupsStatistics({ decideGroup, sortGroup }: Props) {
+export function GroupsStatistics({ decideGroup, sortGroup, setTitle }: Props) {
   const { isLoading, kanjis } = useKanjiList()
 
   const groups = useMemo(() => {
@@ -21,11 +26,11 @@ export function GroupsStatistics({ decideGroup, sortGroup }: Props) {
   }, [kanjis, decideGroup, sortGroup])
 
   return (
-    <ul>
+    <ul className={cx('root')}>
       {isLoading && <span>Loading...</span>}
       {groups?.map(([groupName, elements]) => (
         <li key={groupName}>
-          <GroupStatistics title={groupName} kanjis={elements} />
+          <GroupStatistics title={setTitle(groupName)} kanjis={elements} />
         </li>
       ))}
     </ul>
