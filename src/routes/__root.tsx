@@ -1,6 +1,13 @@
 import { createRootRoute } from '@tanstack/react-router'
 import { Gym } from '../components/Gym'
+import { Container } from '../components/Container'
 
 export const Route = createRootRoute({
-  component: Gym,
+  component() {
+    return (
+      <Container>
+        <Gym />
+      </Container>
+    )
+  },
 })
