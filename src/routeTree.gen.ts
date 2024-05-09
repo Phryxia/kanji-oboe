@@ -18,6 +18,11 @@ import { Route as IndexImport } from './routes/index'
 // Create Virtual Routes
 
 const ConfigLazyImport = createFileRoute('/config')()
+const StatisticsIndexLazyImport = createFileRoute('/statistics/')()
+const StatisticsByGroupLazyImport = createFileRoute('/statistics/by-group')()
+const StatisticsByCharacterLazyImport = createFileRoute(
+  '/statistics/by-character',
+)()
 
 // Create/Update Routes
 
@@ -31,6 +36,27 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const StatisticsIndexLazyRoute = StatisticsIndexLazyImport.update({
+  path: '/statistics/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/statistics/index.lazy').then((d) => d.Route),
+)
+
+const StatisticsByGroupLazyRoute = StatisticsByGroupLazyImport.update({
+  path: '/statistics/by-group',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/statistics/by-group.lazy').then((d) => d.Route),
+)
+
+const StatisticsByCharacterLazyRoute = StatisticsByCharacterLazyImport.update({
+  path: '/statistics/by-character',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/statistics/by-character.lazy').then((d) => d.Route),
+)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -43,11 +69,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConfigLazyImport
       parentRoute: typeof rootRoute
     }
+    '/statistics/by-character': {
+      preLoaderRoute: typeof StatisticsByCharacterLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/statistics/by-group': {
+      preLoaderRoute: typeof StatisticsByGroupLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/statistics/': {
+      preLoaderRoute: typeof StatisticsIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([IndexRoute, ConfigLazyRoute])
+export const routeTree = rootRoute.addChildren([
+  IndexRoute,
+  ConfigLazyRoute,
+  StatisticsByCharacterLazyRoute,
+  StatisticsByGroupLazyRoute,
+  StatisticsIndexLazyRoute,
+])
 
 /* prettier-ignore-end */

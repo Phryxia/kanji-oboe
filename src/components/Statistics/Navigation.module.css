@@ -1,0 +1,31 @@
+.root {
+  display: flex;
+
+  & > a {
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 3.5px 10px;
+    text-decoration: none;
+
+    &:not(:last-child) {
+      margin-right: 16px;
+    }
+
+    &.last {
+      margin-left: auto;
+    }
+
+    &:visited {
+      color: black;
+    }
+
+    &:global(.active) {
+      background: #38e;
+      color: white;
+    }
+
+    &:active {
+      color: none;
+    }
+  }
+}

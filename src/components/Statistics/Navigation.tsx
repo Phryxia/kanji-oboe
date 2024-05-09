@@ -7,10 +7,11 @@ const cx = classnames.bind(styles)
 export function Navigation() {
   return (
     <nav className={cx('root')}>
-      <Link to="/">학습하기</Link>
-      <Link to="/statistics">통계</Link>
-      <Link to="/config" className={cx('last')}>
-        설정
+      <Link to="/statistics/by-group" search={{ group: 'jlpt' }}>
+        JLPT 급수별
+      </Link>
+      <Link to="/statistics/by-group" search={{ group: 'kanken' }}>
+        한자능력검정 급수별
       </Link>
     </nav>
   )
