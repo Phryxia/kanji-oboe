@@ -1,0 +1,37 @@
+.root {
+  .kanji {
+    font-size: 64px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .section {
+    & > *:not(:last-child) {
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .entry {
+      & > *:not(:last-child) {
+        margin-right: 16px;
+      }
+
+      .label {
+        display: inline-block;
+        width: 96px;
+        font-weight: bold;
+      }
+    }
+
+    .study-states {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    margin-top: 32px;
+  }
+}
