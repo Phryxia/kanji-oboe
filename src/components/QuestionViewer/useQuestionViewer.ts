@@ -52,7 +52,11 @@ export function useQuestionViewer() {
     }
 
     if (currentQuestion) {
-      update({ choice, question: currentQuestion })
+      update({
+        choice,
+        question: currentQuestion,
+        isCorrected: currentQuestion.answers.includes(choice),
+      })
     }
     setQuestIndex((q) => q + 1)
   }

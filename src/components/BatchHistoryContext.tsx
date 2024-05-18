@@ -7,7 +7,7 @@ import {
 } from 'react'
 import type { SerializableQuestionSchema } from '../model/types'
 import type { BatchHistory, SolveHistory } from '../model/history'
-import { getScore } from '../utils/history'
+import { getScore, persistSolveHistory } from '../utils/history'
 
 // @ts-ignore
 const BatchHistoryContext = createContext<BatchHistory | undefined>()
@@ -52,6 +52,7 @@ export function BatchHistoryProvider({ children }: PropsWithChildren<{}>) {
         progress: (history?.progress ?? 0) + 1,
       }
     })
+    persistSolveHistory(solveHistory)
   }, [])
 
   function finish() {

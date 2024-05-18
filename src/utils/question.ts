@@ -1,5 +1,6 @@
 import { filter, map, pipe, sort, take, toArray } from '@fxts/core'
 import type { DisplayType, Kanji, Question, QuestionSchema } from '../model/types'
+import { HIRAGANA_REGEXP, KATAKANA_REGEPX } from '../consts/character'
 import { randomInteger, shuffle, takeRandom } from './math'
 
 interface CreateQuestionSchema extends QuestionSchema {
@@ -92,11 +93,16 @@ function createQuestion(
     toArray,
   )
 
+  const answers = [displayKanjiRandomly(trueAnswer, outputTypes)]
+
   return {
-    answers: [displayKanjiRandomly(trueAnswer, outputTypes)],
+    kanji: trueAnswer.kanji,
+    answers,
     wrongAnswers,
     directive: getDirective(inputType, outputTypes),
     hint: displayKanji(trueAnswer, inputType),
+    inputType,
+    trueOutputTypes: answers.map(decideActualType),
   }
 }
 
@@ -185,4 +191,14 @@ function getDirective(inputType: DisplayType, outputTypes: DisplayType[]) {
   const inputText = DisplayTypeTranslation[inputType]
 
   return `${inputText}이 다음과 같은 ${outputText === '한자' ? '한자를' : `한자의 ${outputText}을`} 고르시오`
+}
+
+function decideActualType(choice: string): DisplayType {
+  if (HIRAGANA_REGEXP.test(choice)) {
+    return 'kunyomi'
+  }
+  if (KATAKANA_REGEPX.test(choice)) {
+    return 'onyomi'
+  }
+  return 'kanji'
 }

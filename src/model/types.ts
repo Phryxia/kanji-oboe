@@ -28,10 +28,13 @@ export type KankenLevel =
 export type JLPTLevel = 5 | 4 | 3 | 2 | 1
 
 export interface Question {
+  kanji: string
   answers: string[]
   wrongAnswers: string[]
   directive: string
   hint: string
+  inputType: DisplayType
+  trueOutputTypes: DisplayType[]
 }
 
 export type OrderingType = 'random' | 'shuffle' | 'round-robin'
