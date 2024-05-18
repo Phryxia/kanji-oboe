@@ -1,10 +1,10 @@
 export interface CharacterStatistics {
   kanji: string
   lastSolvedDate?: Date
-  kanjiToOnSolved?: number
-  kanjiToOnCorrected?: number
-  kanjiToKunSolved?: number
-  kanjiToKunCorrected?: number
+  kanjiToOnSolved?: Record<string, number>
+  kanjiToOnCorrected?: Record<string, number>
+  kanjiToKunSolved?: Record<string, number>
+  kanjiToKunCorrected?: Record<string, number>
   onToKanjiSolved?: number
   onToKanjiCorrected?: number
   kunToKanjiSolved?: number

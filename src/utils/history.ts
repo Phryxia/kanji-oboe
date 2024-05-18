@@ -16,9 +16,10 @@ export function getScore(history: BatchHistory) {
 }
 
 export function persistSolveHistory({
-  question: { kanji, inputType, trueOutputTypes },
+  question: { kanji, inputType, trueOutputTypes, answers },
   isCorrected,
 }: SolveHistory) {
+  const answer = answers[0]
   const isKanjiToOn = decideIsKanjiToOn(inputType, trueOutputTypes)
   const isKanjiToKun = decideIsKanjiToKun(inputType, trueOutputTypes)
   const isOnToKanji = decideIsKunToKanji(inputType, trueOutputTypes)
@@ -30,10 +31,10 @@ export function persistSolveHistory({
       ...stat,
       lastSolvedDate: new Date(),
     },
-    onSatisfied(isKanjiToOn, increment('kanjiToOnSolved')),
-    onSatisfied(isKanjiToOn && isCorrected, increment('kanjiToOnCorrected')),
-    onSatisfied(isKanjiToKun, increment('kanjiToKunSolved')),
-    onSatisfied(isKanjiToKun && isCorrected, increment('kanjiToKunCorrected')),
+    onSatisfied(isKanjiToOn, incrementMap('kanjiToOnSolved', answer)),
+    onSatisfied(isKanjiToOn && isCorrected, incrementMap('kanjiToOnCorrected', answer)),
+    onSatisfied(isKanjiToKun, incrementMap('kanjiToKunSolved', answer)),
+    onSatisfied(isKanjiToKun && isCorrected, incrementMap('kanjiToKunCorrected', answer)),
     onSatisfied(isOnToKanji, increment('onToKanjiSolved')),
     onSatisfied(isOnToKanji && isCorrected, increment('onToKanjiCorrected')),
     onSatisfied(isKunToKanji, increment('kunToKanjiSolved')),
@@ -65,10 +66,29 @@ type NumberKeys<T, K> = K extends keyof T
     : never
   : never
 
+type NumberMapKeys<T, K> = K extends keyof T
+  ? T[K] extends Record<string, number> | undefined
+    ? K
+    : never
+  : never
+
 function increment(key: NumberKeys<CharacterStatistics, keyof CharacterStatistics>) {
   return (stat: CharacterStatistics): CharacterStatistics => ({
     ...stat,
     [key]: (stat[key] ?? 0) + 1,
+  })
+}
+
+function incrementMap(
+  key: NumberMapKeys<CharacterStatistics, keyof CharacterStatistics>,
+  secondKey: string,
+) {
+  return (stat: CharacterStatistics): CharacterStatistics => ({
+    ...stat,
+    [key]: {
+      ...((stat[key] as Record<string, number>) ?? {}),
+      [secondKey]: (stat[key]?.[secondKey] ?? 0) + 1,
+    },
   })
 }
 
