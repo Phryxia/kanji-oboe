@@ -1,4 +1,14 @@
 import { map, pipe, reduceLazy, sum, zip } from '@fxts/core'
+import type { CharacterStatistics } from '../model/statistics'
+
+export function getTotalCount(stat: CharacterStatistics) {
+  return (
+    sum(Object.values(stat.kanjiToKunSolved ?? {})) +
+    sum(Object.values(stat.kanjiToOnSolved ?? {})) +
+    (stat.onToKanjiSolved ?? 0) +
+    (stat.kunToKanjiSolved ?? 0)
+  )
+}
 
 /**
  * Return P(correct | in=Kanji, out=Kunyomi)
@@ -31,7 +41,7 @@ export function getPathStatistic(
   )
 }
 
-function wrapZeroProbability(numerator?: number, denominator?: number) {
+export function wrapZeroProbability(numerator?: number, denominator?: number) {
   if (!denominator) return 0
 
   return (numerator ?? 0) / denominator
