@@ -26,22 +26,24 @@
         font-weight: bold;
       }
 
-      .value {
-        &.F {
-          color: #555;
-        }
+      .F {
+        color: #555;
+      }
 
-        &.B {
-          color: #d22;
-        }
+      .B {
+        color: #d22;
+      }
 
-        &.A {
-          color: #da2;
-        }
+      .A {
+        color: #da2;
+      }
 
-        &.S {
-          color: #2d2;
-        }
+      .S {
+        color: #2d2;
+      }
+
+      .additional-value {
+        font-size: 0.7rem;
       }
     }
 

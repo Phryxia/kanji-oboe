@@ -1,3 +1,5 @@
+import type { DisplayType, Kanji } from '../model/types'
+
 export function compareKankenLevel(a: string, b: string): number {
   if (a === 'pre1') {
     if (b === 'pre1') {
@@ -21,4 +23,8 @@ export function compareKankenLevel(a: string, b: string): number {
     return -compareKankenLevel(b, a)
   }
   return Number(a) - Number(b)
+}
+
+export function hasException(kanji: Kanji, type: Exclude<DisplayType, 'kanji'>) {
+  return kanji[type]?.some((yomi) => yomi.includes('[')) ?? false
 }

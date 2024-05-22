@@ -4,12 +4,15 @@ import { useMemo } from 'react'
 import type { CharacterStatistics } from '../../model/statistics'
 import { useKanjiList } from '../useKanjiList'
 import { getGrade, getPathStatistics, getTotalCount } from '../../utils/statistics'
+import { hasException } from '../../utils/character'
 
 const cx = classnames.bind(styles)
 
 interface Props {
   stat: CharacterStatistics
 }
+
+const tooltip = '예외발음 포함 시'
 
 export function CharacterStatisticsView({ stat }: Props) {
   const { kanji: kanjiString, lastSolvedDate } = stat
@@ -20,7 +23,9 @@ export function CharacterStatisticsView({ stat }: Props) {
   )
 
   const kanjiToOnRate = getPathStatistics(stat, 'kanji', 'onyomi')
+  const kanjiToOnExRate = getPathStatistics(stat, 'kanji', 'onyomi', true)
   const kanjiToKunRate = getPathStatistics(stat, 'kanji', 'kunyomi')
+  const kanjiToKunExRate = getPathStatistics(stat, 'kanji', 'kunyomi', true)
   const onToKanjiRate = getPathStatistics(stat, 'onyomi', 'kanji')
   const kunToKanjiRate = getPathStatistics(stat, 'kunyomi', 'kanji')
 
@@ -58,12 +63,28 @@ export function CharacterStatisticsView({ stat }: Props) {
             <span className={cx('value', { [getGrade(kanjiToOnRate)]: true })}>
               {(kanjiToOnRate * 100).toFixed(1)}%
             </span>
+            {kanji && hasException(kanji, 'onyomi') && (
+              <span
+                className={cx('additional-value', { [getGrade(kanjiToOnExRate)]: true })}
+                title={tooltip}
+              >
+                ({(kanjiToOnExRate * 100).toFixed(1)}%)
+              </span>
+            )}
           </div>
           <div className={cx('entry')}>
             <span className={cx('label')}>한자 → 훈독</span>
             <span className={cx('value', { [getGrade(kanjiToKunRate)]: true })}>
               {(kanjiToKunRate * 100).toFixed(1)}%
             </span>
+            {kanji && hasException(kanji, 'kunyomi') && (
+              <span
+                className={cx('additional-value', { [getGrade(kanjiToKunExRate)]: true })}
+                title={tooltip}
+              >
+                ({(kanjiToKunExRate * 100).toFixed(1)}%)
+              </span>
+            )}
           </div>
           <div className={cx('entry')}>
             <span className={cx('label')}>음독 → 한자</span>

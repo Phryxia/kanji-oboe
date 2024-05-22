@@ -16,12 +16,21 @@ export function getPathStatistics(
   stat: CharacterStatistics,
   inputType: DisplayType,
   outputType: DisplayType,
+  isExceptionIncluded?: boolean,
 ) {
   if (inputType === 'kanji') {
     if (outputType === 'onyomi') {
-      return getPathStatisticsForSpecific(stat.kanjiToOnSolved, stat.kanjiToOnCorrected)
+      return getPathStatisticsForSpecific(
+        stat.kanjiToOnSolved,
+        stat.kanjiToOnCorrected,
+        isExceptionIncluded,
+      )
     }
-    return getPathStatisticsForSpecific(stat.kanjiToKunSolved, stat.kanjiToKunCorrected)
+    return getPathStatisticsForSpecific(
+      stat.kanjiToKunSolved,
+      stat.kanjiToKunCorrected,
+      isExceptionIncluded,
+    )
   }
   if (outputType === 'kanji') {
     if (inputType === 'onyomi') {
