@@ -87,3 +87,10 @@ export function getReprStatistics(stat: CharacterStatistics, kanji: Kanji) {
 
   return sum / count
 }
+
+export function getGrade(probability: number) {
+  if (probability < 0.2) return 'F'
+  if (probability < 0.6) return 'B'
+  if (probability < 0.8) return 'A'
+  return 'S'
+}
