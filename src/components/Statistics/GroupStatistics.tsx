@@ -29,11 +29,22 @@ export function GroupStatistics({ title, kanjis }: Props) {
     [kanjis],
   )
 
+  const progress = useMemo(
+    () =>
+      grades.reduce((acc, grade) => {
+        if (grade === 'S') return acc + 1
+        if (grade === 'A') return acc + 0.75
+        if (grade === 'B') return acc + 0.5
+        return 0
+      }, 0),
+    [grades],
+  )
+
   return (
     <details className={cx('details')}>
       <summary className={cx('title')} onClick={() => setIsOpen((b) => !b)}>
         <span>{title}</span>
-        <progress></progress>
+        <progress value={progress} max={grades.length}></progress>
       </summary>
       <div className={cx('buttons')}>
         {isOpen &&
