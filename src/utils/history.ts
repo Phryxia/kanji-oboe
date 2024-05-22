@@ -3,6 +3,7 @@ import type { BatchHistory, SolveHistory } from '../model/history'
 import type { CharacterStatistics } from '../model/statistics'
 import type { DisplayType, Question } from '../model/types'
 import { CharacterStatisticReader } from './persists'
+import { onSatisfied } from './functional'
 
 export function isCorrect(question: Question, choice: string) {
   return question.answers.includes(choice)
@@ -90,14 +91,4 @@ function incrementMap(
       [secondKey]: (stat[key]?.[secondKey] ?? 0) + 1,
     },
   })
-}
-
-function onSatisfied<T>(
-  criteria: boolean | ((value: T) => boolean),
-  fn: (value: T) => T,
-) {
-  return (value: T) =>
-    criteria === true || (typeof criteria === 'function' && criteria(value))
-      ? fn(value)
-      : value
 }

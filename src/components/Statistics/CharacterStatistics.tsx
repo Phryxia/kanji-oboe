@@ -3,11 +3,7 @@ import styles from './CharacterStatistics.module.css'
 import { useMemo } from 'react'
 import type { CharacterStatistics } from '../../model/statistics'
 import { useKanjiList } from '../useKanjiList'
-import {
-  getPathStatistic,
-  getTotalCount,
-  wrapZeroProbability,
-} from '../../utils/statistics'
+import { getPathStatistics, getTotalCount } from '../../utils/statistics'
 
 const cx = classnames.bind(styles)
 
@@ -16,28 +12,17 @@ interface Props {
 }
 
 export function CharacterStatisticsView({ stat }: Props) {
-  const {
-    kanji: kanjiString,
-    lastSolvedDate,
-    kanjiToKunSolved,
-    kanjiToKunCorrected,
-    kanjiToOnSolved,
-    kanjiToOnCorrected,
-    onToKanjiSolved,
-    onToKanjiCorrected,
-    kunToKanjiSolved,
-    kunToKanjiCorrected,
-  } = stat
+  const { kanji: kanjiString, lastSolvedDate } = stat
   const { kanjis } = useKanjiList()
   const kanji = useMemo(
     () => kanjis?.find((k) => k.kanji === kanjiString),
     [kanjiString, kanjis],
   )
 
-  const kanjiToKunRate = getPathStatistic(kanjiToKunSolved, kanjiToKunCorrected)
-  const kanjiToOnRate = getPathStatistic(kanjiToOnSolved, kanjiToOnCorrected)
-  const onToKanjiRate = wrapZeroProbability(onToKanjiSolved, onToKanjiCorrected)
-  const kunToKanjiRate = wrapZeroProbability(kunToKanjiSolved, kunToKanjiCorrected)
+  const kanjiToOnRate = getPathStatistics(stat, 'kanji', 'onyomi')
+  const kanjiToKunRate = getPathStatistics(stat, 'kanji', 'kunyomi')
+  const onToKanjiRate = getPathStatistics(stat, 'onyomi', 'kanji')
+  const kunToKanjiRate = getPathStatistics(stat, 'kunyomi', 'kanji')
 
   return (
     <div className={cx('root')}>
