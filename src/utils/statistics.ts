@@ -1,6 +1,7 @@
 import { map, pipe, reduceLazy, sum, zip } from '@fxts/core'
 import type { CharacterStatistics } from '../model/statistics'
 import type { DisplayType, Kanji } from '../model/types'
+import { onSatisfied } from './functional'
 
 export function getTotalCount(stat: CharacterStatistics) {
   return (
@@ -42,11 +43,16 @@ export function getPathStatistics(
 function getPathStatisticsForSpecific(
   solved?: Record<string, number>,
   corrected?: Record<string, number>,
+  isExceptionIncluded?: boolean,
 ) {
   if (!solved) return 0
 
-  const yomis = Object.keys(solved)
-  const totalKunCount = Object.values(solved).reduce((acc, count) => acc + count, 0)
+  const yomis = onSatisfied(!isExceptionIncluded, (keys: string[]) =>
+    keys.filter((key) => !key.includes('[')),
+  )(Object.keys(solved))
+  const totalKunCount = yomis
+    .map((yomi) => solved[yomi])
+    .reduce((acc, count) => acc + count, 0)
   const pSolved = yomis.map((yomi) => wrapZeroProbability(solved[yomi], totalKunCount))
   const pCorrected = yomis.map((yomi) =>
     wrapZeroProbability(corrected?.[yomi], solved[yomi]),
