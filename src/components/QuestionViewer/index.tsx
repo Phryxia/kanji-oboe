@@ -72,5 +72,5 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
 }
 
 function removeBracket(s: string) {
-  return s.replace(/\\[\\]/g, '')
+  return s.replace(/\[|\]/g, '')
 }
