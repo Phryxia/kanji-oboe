@@ -3,7 +3,7 @@ import styles from './CharacterStatistics.module.css'
 import { useMemo } from 'react'
 import type { CharacterStatistics } from '../../model/statistics'
 import { useKanjiList } from '../useKanjiList'
-import { getPathStatistics, getTotalCount } from '../../utils/statistics'
+import { getGrade, getPathStatistics, getTotalCount } from '../../utils/statistics'
 
 const cx = classnames.bind(styles)
 
@@ -55,19 +55,27 @@ export function CharacterStatisticsView({ stat }: Props) {
           </div>
           <div className={cx('entry')}>
             <span className={cx('label')}>한자 → 음독</span>
-            <span>{(kanjiToOnRate * 100).toFixed(1)}%</span>
+            <span className={cx('value', { [getGrade(kanjiToOnRate)]: true })}>
+              {(kanjiToOnRate * 100).toFixed(1)}%
+            </span>
           </div>
           <div className={cx('entry')}>
             <span className={cx('label')}>한자 → 훈독</span>
-            <span>{(kanjiToKunRate * 100).toFixed(1)}%</span>
+            <span className={cx('value', { [getGrade(kanjiToKunRate)]: true })}>
+              {(kanjiToKunRate * 100).toFixed(1)}%
+            </span>
           </div>
           <div className={cx('entry')}>
             <span className={cx('label')}>음독 → 한자</span>
-            <span>{(onToKanjiRate * 100).toFixed(1)}%</span>
+            <span className={cx('value', { [getGrade(onToKanjiRate)]: true })}>
+              {(onToKanjiRate * 100).toFixed(1)}%
+            </span>
           </div>
           <div className={cx('entry')}>
             <span className={cx('label')}>훈독 → 한자</span>
-            <span>{(kunToKanjiRate * 100).toFixed(1)}%</span>
+            <span className={cx('value', { [getGrade(kunToKanjiRate)]: true })}>
+              {(kunToKanjiRate * 100).toFixed(1)}%
+            </span>
           </div>
         </div>
       </section>
