@@ -1,11 +1,12 @@
 import classnames from 'classnames/bind'
 import styles from './GroupsStatistics.module.css'
 import { map, pipe, toArray } from '@fxts/core'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
 import type { Kanji } from '../../model/types'
 import { CharacterStatisticReader } from '../../utils/persists'
 import { getGrade, getReprStatistics } from '../../utils/statistics'
+import { useGroupStatisticsOpening } from './useGroupStatisticsOpening'
 
 const cx = classnames.bind(styles)
 
@@ -15,7 +16,7 @@ interface Props {
 }
 
 export function GroupStatistics({ title, kanjis }: Props) {
-  const [isOpen, setIsOpen] = useState(false)
+  const { isOpen, setIsOpen } = useGroupStatisticsOpening(title)
 
   const grades = useMemo(
     () =>
@@ -41,11 +42,11 @@ export function GroupStatistics({ title, kanjis }: Props) {
   )
 
   return (
-    <details className={cx('details')}>
-      <summary className={cx('title')} onClick={() => setIsOpen((b) => !b)}>
+    <section className={cx('details')}>
+      <button className={cx('title')} onClick={() => setIsOpen(!isOpen)}>
         <span>{title}</span>
         <progress value={progress} max={grades.length}></progress>
-      </summary>
+      </button>
       <div className={cx('buttons')}>
         {isOpen &&
           kanjis.map(({ kanji }, index) => (
@@ -59,6 +60,6 @@ export function GroupStatistics({ title, kanjis }: Props) {
             </Link>
           ))}
       </div>
-    </details>
+    </section>
   )
 }
