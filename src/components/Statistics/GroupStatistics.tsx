@@ -47,9 +47,9 @@ export function GroupStatistics({ title, kanjis }: Props) {
         <span>{title}</span>
         <progress value={progress} max={grades.length}></progress>
       </button>
-      <div className={cx('buttons')}>
-        {isOpen &&
-          kanjis.map(({ kanji }, index) => (
+      {isOpen && (
+        <div className={cx('buttons')}>
+          {kanjis.map(({ kanji }, index) => (
             <Link
               to="/statistics/by-character"
               search={{ kanji }}
@@ -59,7 +59,8 @@ export function GroupStatistics({ title, kanjis }: Props) {
               {kanji}
             </Link>
           ))}
-      </div>
+        </div>
+      )}
     </section>
   )
 }

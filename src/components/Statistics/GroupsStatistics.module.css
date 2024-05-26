@@ -12,6 +12,9 @@
       display: flex;
       justify-content: stretch;
       align-items: center;
+      width: 100%;
+      background: none;
+      border: none;
 
       cursor: pointer;
 
