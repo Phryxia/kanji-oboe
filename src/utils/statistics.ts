@@ -34,9 +34,9 @@ export function getPathStatistics(
   }
   if (outputType === 'kanji') {
     if (inputType === 'onyomi') {
-      return wrapZeroProbability(stat.onToKanjiSolved, stat.onToKanjiCorrected)
+      return wrapZeroProbability(stat.onToKanjiCorrected, stat.onToKanjiSolved)
     }
-    return wrapZeroProbability(stat.kunToKanjiSolved, stat.kunToKanjiCorrected)
+    return wrapZeroProbability(stat.kunToKanjiCorrected, stat.kunToKanjiSolved)
   }
   throw new Error(`Unsupported statistic path: ${inputType} -> ${outputType}`)
 }
