@@ -55,15 +55,15 @@
         }
 
         &.B {
-          background-color: #e33;
+          background-color: #fd5;
         }
 
         &.A {
-          background-color: #ee3;
+          background-color: #be4;
         }
 
         &.S {
-          background-color: #3e3;
+          background-color: #3f3;
         }
       }
     }
