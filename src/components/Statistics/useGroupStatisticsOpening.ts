@@ -1,30 +1,23 @@
-import { useCallback, useEffect, useMemo, useSyncExternalStore } from 'react'
-import { StorageWrapper } from '../../utils/StorageWrapper'
+import { useStorage } from '../../utils/useStorage'
 
 export function useGroupStatisticsOpening(groupName: string) {
-  const key = `${groupName}.isOpen`
-  const store = useMemo(
-    () =>
-      new StorageWrapper(
-        sessionStorage,
-        key,
-        (value) => value === 'true',
-        (value) => value.toString(),
-      ),
-    [key],
-  )
+  const { value, setValue } = useStorage<boolean>({
+    storage: sessionStorage,
+    storageKey: `${groupName}.isOpen`,
+    parse: parseBoolean,
+    stringify: stringifyBoolean,
+  })
 
-  const isOpen = useSyncExternalStore<boolean>(
-    (onStoreChange) => {
-      store.addListener(onStoreChange)
-      return () => store.removeListener(onStoreChange)
-    },
-    () => store.getItem() ?? false,
-  )
+  return {
+    isOpen: value ?? false,
+    setIsOpen: setValue,
+  }
+}
 
-  const setIsOpen = useCallback((isOpen: boolean) => store.setItem(isOpen), [key])
+function parseBoolean(s: string) {
+  return s === 'true'
+}
 
-  useEffect(() => () => store.destroy(), [store])
-
-  return { isOpen, setIsOpen }
+function stringifyBoolean(v: boolean) {
+  return v.toString()
 }
