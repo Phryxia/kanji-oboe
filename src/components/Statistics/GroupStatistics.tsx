@@ -31,13 +31,18 @@ export function GroupStatistics({ title, kanjis }: Props) {
   const grades = useMemo(
     () =>
       pipe(
-        slicedKanjis,
+        kanjis,
         map((kanji) => ({ kanji, stat: CharacterStatisticReader.read(kanji.kanji) })),
         map(({ kanji, stat }) => getReprStatistics(stat, kanji)),
         map(getGrade),
         toArray,
       ),
-    [slicedKanjis],
+    [kanjis],
+  )
+
+  const slicedGrades = useMemo(
+    () => getSubArrayWithPage(grades, PAGE_SIZE, page),
+    [grades],
   )
 
   const progress = useMemo(
@@ -73,7 +78,7 @@ export function GroupStatistics({ title, kanjis }: Props) {
                 to="/statistics/by-character"
                 search={{ kanji }}
                 key={kanji}
-                className={cx('kanji', { [grades[index]]: true })}
+                className={cx('kanji', { [slicedGrades[index]]: true })}
               >
                 {kanji}
               </Link>
