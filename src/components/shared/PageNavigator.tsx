@@ -1,5 +1,9 @@
+import classnames from 'classnames/bind'
+import styles from './PageNavigator.module.css'
 import { map } from '@fxts/core'
 import { integers } from '../../utils/math'
+
+const cx = classnames.bind(styles)
 
 interface Props {
   currentPage: number
@@ -17,27 +21,38 @@ export function PageNavaigator({
   const [start, end] = getPageSlice(currentPage, maxPage, sliceSize)
 
   return (
-    <nav>
-      <button disabled={currentPage === 0} onClick={() => onPageChange(currentPage - 1)}>
-        prev
-      </button>
-      {start > 0 && '...'}
-      {[
-        ...map(
-          (i) => (
-            <button key={i} onClick={() => onPageChange(i)}>
-              {i}
-            </button>
-          ),
-          integers(start, end),
-        ),
-      ]}
-      {end < maxPage && '...'}
+    <nav className={cx('root')}>
       <button
+        className={cx('button')}
+        disabled={currentPage === 0}
+        onClick={() => onPageChange(currentPage - 1)}
+      >
+        이전
+      </button>
+      <div className={cx('fill')}>{start > 0 && '...'}</div>
+      <div className={cx('pages')}>
+        {[
+          ...map(
+            (i) => (
+              <button
+                key={i}
+                className={cx('button', { selected: currentPage === i })}
+                onClick={() => onPageChange(i)}
+              >
+                {i}
+              </button>
+            ),
+            integers(start, end),
+          ),
+        ]}
+      </div>
+      <div className={cx('fill')}>{end < maxPage && '...'}</div>
+      <button
+        className={cx('button')}
         disabled={currentPage === maxPage}
         onClick={() => onPageChange(currentPage + 1)}
       >
-        next
+        다음
       </button>
     </nav>
   )

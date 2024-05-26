@@ -1,0 +1,34 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .button {
+    background: none;
+    border: 1px solid #555;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 6px 10px;
+
+    &.selected {
+      background: #38e;
+      color: white;
+    }
+
+    &:disabled {
+      border-color: #eee;
+      cursor: not-allowed;
+    }
+  }
+
+  .pages {
+    & > :not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+
+  .fill {
+    text-align: center;
+    width: 10%;
+  }
+}

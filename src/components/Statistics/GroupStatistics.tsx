@@ -59,6 +59,14 @@ export function GroupStatistics({ title, kanjis }: Props) {
       </button>
       {isOpen && (
         <>
+          <div className={cx('navigator')}>
+            <PageNavaigator
+              currentPage={page}
+              maxPage={Math.floor(kanjis.length / PAGE_SIZE)}
+              sliceSize={PAGE_SLICE_SIZE}
+              onPageChange={setPage}
+            />
+          </div>
           <div className={cx('buttons')}>
             {slicedKanjis.map(({ kanji }, index) => (
               <Link
@@ -71,12 +79,6 @@ export function GroupStatistics({ title, kanjis }: Props) {
               </Link>
             ))}
           </div>
-          <PageNavaigator
-            currentPage={page}
-            maxPage={Math.floor(kanjis.length / PAGE_SIZE)}
-            sliceSize={PAGE_SLICE_SIZE}
-            onPageChange={setPage}
-          />
         </>
       )}
     </section>
