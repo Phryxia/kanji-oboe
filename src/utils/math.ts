@@ -17,3 +17,9 @@ export function shuffle<T>(arr: T[]) {
 export function takeRandom<T>(list: T[]) {
   return list[randomInteger(0, list.length - 1)]
 }
+
+export function* integers(min: number, max: number, step: number = 1) {
+  for (let i = min; i <= max; i += step) {
+    yield i
+  }
+}

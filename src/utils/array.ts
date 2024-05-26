@@ -10,3 +10,7 @@ export function getLengthFoced<T>(list: T[], length: number) {
   res.length = length
   return res
 }
+
+export function getSubArrayWithPage<T>(list: T[], pageSize: number, pageIndex: number) {
+  return list.slice(pageSize * pageIndex, pageSize * (pageIndex + 1))
+}

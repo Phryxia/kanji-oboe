@@ -24,7 +24,7 @@ export function GroupsStatistics({
   const { isLoading, kanjis } = useKanjiList()
 
   const groups = useMemo(() => {
-    if (!kanjis) return undefined
+    if (!kanjis) return []
 
     return Object.entries(groupBy(decideGroup, kanjis)).sort(([titleA], [titleB]) =>
       sortGroup(titleA, titleB),
@@ -34,7 +34,7 @@ export function GroupsStatistics({
   return (
     <ul className={cx('root')}>
       {isLoading && <span>Loading...</span>}
-      {groups?.map(([groupName, elements]) => (
+      {groups.map(([groupName, elements]) => (
         <li key={`${bigGroupName}-${groupName}`}>
           <GroupStatistics title={setTitle(groupName)} kanjis={elements} />
         </li>

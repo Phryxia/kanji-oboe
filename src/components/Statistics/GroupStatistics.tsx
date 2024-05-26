@@ -1,14 +1,18 @@
 import classnames from 'classnames/bind'
 import styles from './GroupsStatistics.module.css'
 import { map, pipe, toArray } from '@fxts/core'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import type { Kanji } from '../../model/types'
 import { CharacterStatisticReader } from '../../utils/persists'
 import { getGrade, getReprStatistics } from '../../utils/statistics'
+import { getSubArrayWithPage } from '../../utils/array'
+import { PageNavaigator } from '../shared/PageNavigator'
 import { useGroupStatisticsOpening } from './useGroupStatisticsOpening'
 
 const cx = classnames.bind(styles)
+const PAGE_SIZE = 64
+const PAGE_SLICE_SIZE = 5
 
 interface Props {
   title: string
@@ -17,17 +21,23 @@ interface Props {
 
 export function GroupStatistics({ title, kanjis }: Props) {
   const { isOpen, setIsOpen } = useGroupStatisticsOpening(title)
+  const [page, setPage] = useState(0)
+
+  const slicedKanjis = useMemo(
+    () => getSubArrayWithPage(kanjis, PAGE_SIZE, page),
+    [kanjis, page],
+  )
 
   const grades = useMemo(
     () =>
       pipe(
-        kanjis,
+        slicedKanjis,
         map((kanji) => ({ kanji, stat: CharacterStatisticReader.read(kanji.kanji) })),
         map(({ kanji, stat }) => getReprStatistics(stat, kanji)),
         map(getGrade),
         toArray,
       ),
-    [kanjis],
+    [slicedKanjis],
   )
 
   const progress = useMemo(
@@ -48,18 +58,26 @@ export function GroupStatistics({ title, kanjis }: Props) {
         <progress value={progress} max={grades.length}></progress>
       </button>
       {isOpen && (
-        <div className={cx('buttons')}>
-          {kanjis.map(({ kanji }, index) => (
-            <Link
-              to="/statistics/by-character"
-              search={{ kanji }}
-              key={kanji}
-              className={cx('kanji', { [grades[index]]: true })}
-            >
-              {kanji}
-            </Link>
-          ))}
-        </div>
+        <>
+          <div className={cx('buttons')}>
+            {slicedKanjis.map(({ kanji }, index) => (
+              <Link
+                to="/statistics/by-character"
+                search={{ kanji }}
+                key={kanji}
+                className={cx('kanji', { [grades[index]]: true })}
+              >
+                {kanji}
+              </Link>
+            ))}
+          </div>
+          <PageNavaigator
+            currentPage={page}
+            maxPage={Math.floor(kanjis.length / PAGE_SIZE)}
+            sliceSize={PAGE_SLICE_SIZE}
+            onPageChange={setPage}
+          />
+        </>
       )}
     </section>
   )
