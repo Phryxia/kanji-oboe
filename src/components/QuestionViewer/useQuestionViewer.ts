@@ -8,7 +8,7 @@ import { useBatchHistoryRecorder } from '../BatchHistoryContext'
 const batchSize = 10
 
 export function useQuestionViewer() {
-  const { initialize, update, finish } = useBatchHistoryRecorder()
+  const { initialize, update } = useBatchHistoryRecorder()
   const currentSchema = useRuntimeSchema()
   const { isLoading, kanjis, kankenLevels } = useKanjiList()
   const [generator, setGenerator] = useState<Generator<Question[]> | undefined>()
@@ -24,12 +24,11 @@ export function useQuestionViewer() {
       batchSize,
     })
     setGenerator(generator)
+    goNextBatch(generator)
   }, [kanjis, kankenLevels, currentSchema])
 
-  function goNextBatch() {
-    finish()
-
-    const res = generator?.next().value
+  function goNextBatch(generator: Generator<Question[]>) {
+    const res = generator.next().value
 
     if (!res) return
 
@@ -38,27 +37,35 @@ export function useQuestionViewer() {
     initialize(currentSchema, batchSize)
   }
 
-  useLayoutEffect(() => {
-    goNextBatch()
-  }, [generator])
-
   const currentQuestion = questions?.[questIndex]
   const isLastInBatch = !!generator && questions?.length === questIndex + 1
 
   function goNextQuestion(choice: string) {
-    if (isLastInBatch) {
-      goNextBatch()
-      return
-    }
-
     if (currentQuestion) {
+      const isCorrected = currentQuestion.answers.includes(choice)
       update({
         choice,
         question: currentQuestion,
-        isCorrected: currentQuestion.answers.includes(choice),
+        isCorrected,
       })
+
+      if (!isCorrected) {
+        addReviewQuestion(currentQuestion)
+        setQuestIndex((q) => q + 1)
+        return
+      }
     }
+
+    if (isLastInBatch) {
+      goNextBatch(generator)
+      return
+    }
+
     setQuestIndex((q) => q + 1)
+  }
+
+  function addReviewQuestion(question: Question) {
+    setQuestions((q) => [...(q ?? []), { ...question }])
   }
 
   const progress = questIndex

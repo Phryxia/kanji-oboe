@@ -7,7 +7,7 @@ import {
 } from 'react'
 import type { SerializableQuestionSchema } from '../model/types'
 import type { BatchHistory, SolveHistory } from '../model/history'
-import { getScore, persistSolveHistory } from '../utils/history'
+import { persistSolveHistory } from '../utils/history'
 
 // @ts-ignore
 const BatchHistoryContext = createContext<BatchHistory | undefined>()
@@ -15,7 +15,6 @@ const BatchHistoryContext = createContext<BatchHistory | undefined>()
 interface BatchHistoryRecorder {
   initialize(schema: SerializableQuestionSchema, totalCount: number): void
   update(solveHistory: SolveHistory): void
-  finish(): void
 }
 
 // @ts-ignore
@@ -55,18 +54,10 @@ export function BatchHistoryProvider({ children }: PropsWithChildren<{}>) {
     persistSolveHistory(solveHistory)
   }, [])
 
-  function finish() {
-    if (!batchHistory || batchHistory.progress < batchHistory.totalCount) return
-
-    // todo: persist
-    alert(`Good job! ${getScore(batchHistory)}/${batchHistory.totalCount}`)
-  }
-
   return (
     <BatchHistoryRecorderContext.Provider
       value={{
         initialize,
-        finish,
         update,
       }}
     >
