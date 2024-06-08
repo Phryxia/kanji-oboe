@@ -27,13 +27,20 @@ export type KankenLevel =
 
 export type JLPTLevel = 5 | 4 | 3 | 2 | 1
 
+export interface Choice {
+  display: string
+  kanji: Kanji
+  type: DisplayType
+}
+
 export interface Question {
   kanji: string
-  answers: string[]
-  wrongAnswers: string[]
+  answers: Choice[]
+  wrongAnswers: Choice[]
   directive: string
   hint: string
   inputType: DisplayType
+  outputTypes: DisplayType[]
   trueOutputTypes: DisplayType[]
 }
 

@@ -1,5 +1,5 @@
 import { filter, map, pipe, sort, take, toArray } from '@fxts/core'
-import type { DisplayType, Kanji, Question, QuestionSchema } from '../model/types'
+import type { Choice, DisplayType, Kanji, Question, QuestionSchema } from '../model/types'
 import { HIRAGANA_REGEXP, KATAKANA_REGEPX } from '../consts/character'
 import { randomInteger, shuffle, takeRandom } from './math'
 
@@ -87,13 +87,15 @@ function createQuestion(
         [wrongAnswer, wrongAnswerRanker(wrongAnswer, trueAnswer, domain)] as const,
     ),
     sort(([_0, a], [_1, b]) => b - a),
-    map(([wrongAnswer]) => displayKanjiRandomly(wrongAnswer, outputTypes)),
+    map(([kanji]) => ({ kanji, ...displayKanjiRandomly(kanji, outputTypes) })),
     removeDuplicatedChoices,
     take(choiceCount - 1),
     toArray,
   )
 
-  const answers = [displayKanjiRandomly(trueAnswer, outputTypes)]
+  const answers = [
+    { kanji: trueAnswer, ...displayKanjiRandomly(trueAnswer, outputTypes) },
+  ]
 
   return {
     kanji: trueAnswer.kanji,
@@ -102,7 +104,8 @@ function createQuestion(
     directive: getDirective(inputType, outputTypes),
     hint: displayKanji(trueAnswer, inputType),
     inputType,
-    trueOutputTypes: answers.map(decideActualType),
+    outputTypes,
+    trueOutputTypes: answers.map(({ display }) => decideActualType(display)),
   }
 }
 
@@ -139,12 +142,12 @@ function hasIntersection(a: Kanji, b: Kanji, displayType: DisplayType) {
   return a[displayType]?.some((element) => b[displayType]?.includes(element))
 }
 
-function removeDuplicatedChoices(list: Iterable<string>) {
+function removeDuplicatedChoices(list: Iterable<Choice>) {
   const dup: Record<string, boolean> = { '': true }
 
-  return filter((s) => {
-    if (dup[s]) return false
-    dup[s] = true
+  return filter(({ display }) => {
+    if (dup[display]) return false
+    dup[display] = true
     return true
   }, list)
 }
@@ -155,7 +158,11 @@ function displayKanjiRandomly(kanji: Kanji, outputTypes: DisplayType[]) {
       (outputType) => outputType === 'kanji' || !!kanji[outputType]?.length,
     ),
   )
-  return displayKanji(kanji, takeRandom(feasibleTypes))
+  const displayType = takeRandom(feasibleTypes)
+  return {
+    type: displayType,
+    display: displayKanji(kanji, displayType),
+  }
 }
 
 function displayKanji(kanji: Kanji, displayType: DisplayType) {
@@ -193,7 +200,7 @@ function getDirective(inputType: DisplayType, outputTypes: DisplayType[]) {
   return `${inputText}이 다음과 같은 ${outputText === '한자' ? '한자를' : `한자의 ${outputText}을`} 고르시오`
 }
 
-function decideActualType(choice: string): DisplayType {
+export function decideActualType(choice: string): DisplayType {
   if (HIRAGANA_REGEXP.test(choice)) {
     return 'kunyomi'
   }

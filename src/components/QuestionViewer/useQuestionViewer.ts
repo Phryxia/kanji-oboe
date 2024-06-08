@@ -42,7 +42,9 @@ export function useQuestionViewer() {
 
   function goNextQuestion(choice: string) {
     if (currentQuestion) {
-      const isCorrected = currentQuestion.answers.includes(choice)
+      const isCorrected = currentQuestion.answers.some(
+        ({ display }) => display === choice,
+      )
       update({
         choice,
         question: currentQuestion,

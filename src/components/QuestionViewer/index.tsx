@@ -3,6 +3,8 @@ import styles from './QuestionViewer.module.css'
 import { useLayoutEffect, useMemo, useState } from 'react'
 import type { Question } from '../../model/types'
 import { shuffle } from '../../utils/math'
+import { QuestionChoice } from './QuestionChoice'
+import { removeBracket } from './utils'
 
 const cx = classnames.bind(styles)
 
@@ -23,8 +25,6 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
     [answers, wrongAnswers],
   )
 
-  const isCorrect = !!selection && answers.includes(selection)
-
   function handleNext() {
     onProceed(selection)
   }
@@ -43,20 +43,16 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
 
       <div className={cx('hint')}>{removeBracket(hint)}</div>
 
-      <ul className={cx('choices', { two_track: choices.length >= 5 })}>
+      <ul className={cx('choices', { two_track: true })}>
         {choices.map((choice) => (
-          <li key={choice} className={cx('choice-wrapper')}>
-            <button
-              className={cx('choice', {
-                correct: isSelected && answers.includes(choice),
-                wrong: choice === selection && !isCorrect,
-              })}
-              onClick={() => setSelection(choice)}
-              disabled={isSelected}
-            >
-              {removeBracket(choice)}
-            </button>
-          </li>
+          <QuestionChoice
+            key={choice.kanji.kanji}
+            isAnswered={isSelected}
+            isSelected={choice.display === selection}
+            choice={choice}
+            question={question}
+            onClick={() => setSelection(choice.display)}
+          />
         ))}
 
         {isSelected && (
@@ -69,8 +65,4 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
       </ul>
     </section>
   )
-}
-
-function removeBracket(s: string) {
-  return s.replace(/\[|\]/g, '')
 }

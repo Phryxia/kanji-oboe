@@ -5,13 +5,13 @@ import type { DisplayType, Question } from '../model/types'
 import { CharacterStatisticReader } from './persists'
 import { onSatisfied } from './functional'
 
-export function isCorrect(question: Question, choice: string) {
-  return question.answers.includes(choice)
+export function decideIsCorrect(question: Question, choice: string) {
+  return question.answers.some(({ display }) => display === choice)
 }
 
 export function getScore(history: BatchHistory) {
   return history.choices.reduce(
-    (acc, { choice, question }) => (isCorrect(question, choice) ? acc + 1 : acc),
+    (acc, { choice, question }) => (decideIsCorrect(question, choice) ? acc + 1 : acc),
     0,
   )
 }
@@ -32,10 +32,16 @@ export function persistSolveHistory({
       ...stat,
       lastSolvedDate: new Date(),
     },
-    onSatisfied(isKanjiToOn, incrementMap('kanjiToOnSolved', answer)),
-    onSatisfied(isKanjiToOn && isCorrected, incrementMap('kanjiToOnCorrected', answer)),
-    onSatisfied(isKanjiToKun, incrementMap('kanjiToKunSolved', answer)),
-    onSatisfied(isKanjiToKun && isCorrected, incrementMap('kanjiToKunCorrected', answer)),
+    onSatisfied(isKanjiToOn, incrementMap('kanjiToOnSolved', answer.display)),
+    onSatisfied(
+      isKanjiToOn && isCorrected,
+      incrementMap('kanjiToOnCorrected', answer.display),
+    ),
+    onSatisfied(isKanjiToKun, incrementMap('kanjiToKunSolved', answer.display)),
+    onSatisfied(
+      isKanjiToKun && isCorrected,
+      incrementMap('kanjiToKunCorrected', answer.display),
+    ),
     onSatisfied(isOnToKanji, increment('onToKanjiSolved')),
     onSatisfied(isOnToKanji && isCorrected, increment('onToKanjiCorrected')),
     onSatisfied(isKunToKanji, increment('kunToKanjiSolved')),
