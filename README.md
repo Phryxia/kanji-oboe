@@ -1,30 +1,13 @@
-# React + TypeScript + Vite
+# Kanji Oboe
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Kanji Oboe is the specialized web application for learning Japanese Kanji and their pronounciation, in two types of reading: onyomi and kunyomi. Oboe(覚え) means 'memorize' in Japanese imperative form. It's inspired by [Kanji Quizzer](http://www.studykanji.net/).
 
-Currently, two official plugins are available:
+Kanji Oboe has carefully selected copyright-free data to make the entire service available under the GPL. Free knowledge should be shared through free service. Kanji Oboe will never make any profit including google ads.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Kanji Oboe is still work in progress. I have plans for supporting both English and Korean.
 
-## Expanding the ESLint configuration
+## Dataset Credit
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- `Kanji_some_date.csv`: Tamaoka, K., Makioka, S., Sanders, S. & Verdonschot, R.G. (2017). www.kanjidatabase.com: A new interactive online database for psychological and linguistic research on Japanese kanji and their compound words. Psychological Research. 81, 696-708.
+- `kanken.csv`: Handmade dataset, refer to [#official kanken site](https://www.kanken.or.jp/kanken/outline/degree.html)
+- `jlpt_vocab.csv`: Downloaded from [#Kaggle](https://www.kaggle.com/datasets/robinpourtaud/jlpt-words-by-level?resource=download), where original source is https://www.tanos.co.uk/jlpt/sharing/ (CC-BY)
