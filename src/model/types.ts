@@ -66,3 +66,10 @@ export interface SerializableQuestionSchema
 }
 
 export type LabelPair<T> = { value: T; label: string }
+
+export interface Vocabulary {
+  word: string
+  furigana: string
+  translateEn: string
+  jlptLevel: JLPTLevel
+}

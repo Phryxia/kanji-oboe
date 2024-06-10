@@ -5,6 +5,7 @@ import type { Question } from '../../model/types'
 import { shuffle } from '../../utils/math'
 import { QuestionChoice } from './QuestionChoice'
 import { removeBracket } from './utils'
+import { useVocab } from '../useVocab'
 
 const cx = classnames.bind(styles)
 
@@ -33,6 +34,13 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
     setSelection('')
   }, [question])
 
+  const { getExample, isLoading } = useVocab()
+
+  const examples = useMemo(
+    () => getExample(answers[0].kanji.kanji, 4),
+    [answers[0].kanji.kanji, isLoading],
+  )
+
   return (
     <section className={cx('root')}>
       <progress className={cx('progress')} value={progress} max={totalCount}>
@@ -42,6 +50,12 @@ export function QuestionViewer({ question, onProceed, progress, totalCount }: Pr
       <p className={cx('directive')}>{directive}</p>
 
       <div className={cx('hint')}>{removeBracket(hint)}</div>
+
+      <div className={cx('examples')}>
+        {examples.map((vocab) => (
+          <span key={vocab.word}>{vocab.word}</span>
+        ))}
+      </div>
 
       <ul className={cx('choices', { two_track: true })}>
         {choices.map((choice) => (
